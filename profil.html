@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Profil - Nokosia Store</title>
+  <meta name="theme-color" content="#0b0b12">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span>Nokosia</span>
+    </a>
+  </div>
+</header>
+
+<main class="container page">
+  <div id="loginNeeded" class="card text-center hidden">
+    <p class="mb-3">Silakan login.</p>
+    <a href="login.html" class="btn btn-primary">Login dengan GitHub</a>
+  </div>
+
+  <div id="profilContent" class="hidden">
+    <div class="profile-header">
+      <div id="avatarArea"></div>
+      <h2 id="userName" style="font-size:1.2rem;margin-bottom:4px">-</h2>
+      <p id="userEmail" class="text-muted" style="font-size:0.9rem">-</p>
+      <div class="balance-pill" style="display:inline-flex;margin-top:12px">
+        Saldo: Rp <span id="userBalance">0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Kode Referral</div>
+      <div class="ref-box">
+        <div class="ref-code" id="refCode">-</div>
+        <p class="text-muted mt-2" style="font-size:0.8rem">Setiap teman deposit, kamu dapat bonus Rp 1.000</p>
+        <button class="btn btn-ghost mt-3" style="padding:8px 16px;font-size:0.85rem" onclick="copyRef()">Salin Link Referral</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Kontak Support</div>
+      <div class="flex gap-2" style="flex-wrap:wrap">
+        <a id="waLink" href="#" target="_blank" class="btn btn-ghost" style="flex:1">WhatsApp</a>
+        <a id="tgLink" href="#" target="_blank" class="btn btn-ghost" style="flex:1">Telegram</a>
+      </div>
+    </div>
+
+    <button onclick="logout()" class="btn btn-danger btn-block mt-3">Keluar</button>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    <span>Beranda</span>
+  </a>
+  <a href="deposit.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+    <span>Deposit</span>
+  </a>
+  <a href="beli.html" class="nav-item center">
+    <div class="center-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
+    </div>
+    <span>Beli</span>
+  </a>
+  <a href="pesanan.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+    <span>Pesanan</span>
+  </a>
+  <a href="profil.html" class="nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+let currentUser = null;
+
+(async () => {
+  currentUser = await getCurrentUser();
+  if (!currentUser) {
+    document.getElementById('loginNeeded').classList.remove('hidden');
+    return;
+  }
+
+  document.getElementById('profilContent').classList.remove('hidden');
+  document.getElementById('userName').textContent = currentUser.name || currentUser.full_name || 'User';
+  document.getElementById('userEmail').textContent = currentUser.email || '';
+  document.getElementById('userBalance').textContent = Number(currentUser.balance||0).toLocaleString('id-ID');
+  document.getElementById('refCode').textContent = currentUser.referral_code || '-';
+
+  // Avatar
+  const av = document.getElementById('avatarArea');
+  if (currentUser.avatar_url || currentUser.avatar) {
+    av.innerHTML = `<img src="${currentUser.avatar_url || currentUser.avatar}" alt="Avatar" class="avatar">`;
+  } else {
+    const initial = (currentUser.name || currentUser.email || 'U')[0].toUpperCase();
+    av.innerHTML = `<div class="avatar" style="display:grid;place-items:center;font-size:1.8rem;color:var(--purple-light)">${initial}</div>`;
+  }
+
+  document.getElementById('waLink').href = CONFIG.WA_LINK;
+  document.getElementById('tgLink').href = CONFIG.TELEGRAM_LINK;
+})();
+
+function copyRef() {
+  const code = currentUser?.referral_code;
+  if (!code) return;
+  const link = location.origin + '/login.html?ref=' + code;
+  navigator.clipboard.writeText(link).then(() => toast('Link referral disalin!'));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nokosia Store - Nomor Virtual OTP Premium</title>
+  <meta name="description" content="Nokosia Store - Nomor virtual OTP cepat, aman, dan elegan. Deposit instan, markup transparan.">
+  <meta name="theme-color" content="#0b0b12">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span>Nokosia</span>
+    </a>
+    <div id="headerRight">
+      <a href="login.html" class="btn btn-primary" style="padding:8px 16px;font-size:0.85rem">Masuk</a>
+    </div>
+  </div>
+</header>
+
+<main class="container page">
+  <section class="hero">
+    <h1>Nomor Virtual OTP<br>Super Cepat & Elegan</h1>
+    <p>Beli nokos untuk WhatsApp, Telegram, Shopee, dan ratusan aplikasi. Deposit instan, OTP masuk dalam hitungan detik.</p>
+    <div class="flex gap-2 justify-between" style="max-width:320px;margin:0 auto">
+      <a href="beli.html" class="btn btn-primary btn-block">Beli Sekarang</a>
+      <a href="deposit.html" class="btn btn-ghost btn-block">Deposit</a>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">850+</div>
+      <div class="stat-label">Layanan</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">180+</div>
+      <div class="stat-label">Negara</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">&lt;30s</div>
+      <div class="stat-label">OTP Masuk</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Cara Kerja
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <strong>Deposit Saldo</strong>
+          <p class="text-muted" style="font-size:0.85rem;margin-top:2px">Isi saldo via QRIS. Nominal unik otomatis.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <strong>Pilih Layanan & Negara</strong>
+          <p class="text-muted" style="font-size:0.85rem;margin-top:2px">WhatsApp, Telegram, Shopee, dll.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <strong>Dapat Nomor & OTP</strong>
+          <p class="text-muted" style="font-size:0.85rem;margin-top:2px">Nomor muncul, OTP otomatis tampil di layar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Keunggulan</div>
+    <ul style="list-style:none;display:grid;gap:10px;font-size:0.9rem">
+      <li class="flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        Harga transparan (sudah termasuk markup)
+      </li>
+      <li class="flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        Refund otomatis jika OTP gagal
+      </li>
+      <li class="flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        Login aman dengan GitHub
+      </li>
+      <li class="flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        Referral bonus Rp 1.000 per deposit
+      </li>
+    </ul>
+  </div>
+</main>
+
+<nav class="bottom-nav" aria-label="Navigasi utama">
+  <a href="index.html" class="nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    <span>Beranda</span>
+  </a>
+  <a href="deposit.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+    <span>Deposit</span>
+  </a>
+  <a href="beli.html" class="nav-item center">
+    <div class="center-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
+    </div>
+    <span>Beli</span>
+  </a>
+  <a href="pesanan.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+    <span>Pesanan</span>
+  </a>
+  <a href="profil.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  // Update header berdasarkan login status
+  (async () => {
+    const user = await getCurrentUser();
+    const right = document.getElementById('headerRight');
+    if (user) {
+      right.innerHTML = `
+        <div class="balance-pill" id="balancePill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>
+          <span id="userBalance">${Number(user.balance||0).toLocaleString('id-ID')}</span>
+        </div>`;
+    }
+  })();
+</script>
+</body>
+</html>

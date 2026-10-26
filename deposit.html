@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Deposit - Nokosia Store</title>
+  <meta name="theme-color" content="#0b0b12">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span>Nokosia</span>
+    </a>
+    <div class="balance-pill">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>
+      <span id="userBalance">0</span>
+    </div>
+  </div>
+</header>
+
+<main class="container page">
+  <div id="loginNeeded" class="card text-center hidden">
+    <p class="mb-3">Login dulu untuk deposit.</p>
+    <a href="login.html" class="btn btn-primary">Login dengan GitHub</a>
+  </div>
+
+  <div id="depositContent">
+    <div class="card">
+      <div class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        Deposit Saldo
+      </div>
+      <p class="text-muted mb-3" style="font-size:0.9rem">Minimal Rp 5.000. Sistem menambahkan digit unik agar pembayaran QRIS akurat.</p>
+      
+      <div class="form-group">
+        <label class="form-label">Nominal Deposit</label>
+        <input type="number" id="amount" class="form-control" placeholder="Contoh: 10000" min="5000" step="1000">
+      </div>
+      
+      <div class="flex gap-2 mb-3" style="flex-wrap:wrap">
+        <button class="btn btn-ghost" style="padding:8px 14px;font-size:0.85rem" onclick="setAmount(10000)">10.000</button>
+        <button class="btn btn-ghost" style="padding:8px 14px;font-size:0.85rem" onclick="setAmount(25000)">25.000</button>
+        <button class="btn btn-ghost" style="padding:8px 14px;font-size:0.85rem" onclick="setAmount(50000)">50.000</button>
+        <button class="btn btn-ghost" style="padding:8px 14px;font-size:0.85rem" onclick="setAmount(100000)">100.000</button>
+      </div>
+      
+      <button id="btnDeposit" class="btn btn-primary btn-block">Buat Tagihan</button>
+    </div>
+
+    <div class="card hidden" id="qrCard">
+      <div class="card-title">Bayar Sekarang</div>
+      <p class="text-center mb-2">Bayar <strong id="uniqueAmount" style="color:var(--purple-neon);font-size:1.3rem">-</strong></p>
+      <div id="qrContainer" class="text-center" style="margin:16px 0"></div>
+      <p class="text-muted text-center" style="font-size:0.8rem">Scan QRIS di atas. Setelah bayar, saldo otomatis masuk.</p>
+      <button id="btnCheckStatus" class="btn btn-ghost btn-block mt-3">Cek Status Pembayaran</button>
+    </div>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    <span>Beranda</span>
+  </a>
+  <a href="deposit.html" class="nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+    <span>Deposit</span>
+  </a>
+  <a href="beli.html" class="nav-item center">
+    <div class="center-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
+    </div>
+    <span>Beli</span>
+  </a>
+  <a href="pesanan.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+    <span>Pesanan</span>
+  </a>
+  <a href="profil.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+let currentUser = null;
+let currentTrxId = null;
+let currentAmount = 0;
+
+function setAmount(n) {
+  document.getElementById('amount').value = n;
+}
+
+(async () => {
+  currentUser = await getCurrentUser();
+  if (!currentUser) {
+    document.getElementById('loginNeeded').classList.remove('hidden');
+    document.getElementById('depositContent').classList.add('hidden');
+    return;
+  }
+  document.getElementById('userBalance').textContent = Number(currentUser.balance||0).toLocaleString('id-ID');
+})();
+
+document.getElementById('btnDeposit').onclick = async () => {
+  const amount = parseInt(document.getElementById('amount').value) || 0;
+  if (amount < CONFIG.DEPOSIT_MIN) {
+    toast('Minimal deposit Rp ' + CONFIG.DEPOSIT_MIN.toLocaleString('id-ID'));
+    return;
+  }
+
+  const btn = document.getElementById('btnDeposit');
+  btn.disabled = true;
+  btn.textContent = 'Membuat tagihan...';
+
+  try {
+    // Unique amount
+    const unique = amount + Math.floor(Math.random() * 900) + 100;
+
+    const r = await wnRequest('POST', '/deposit/create', { amount: unique });
+    const trxId = r.data?.trxId || r.trxId || ('DEP' + Date.now());
+    const qr = r.data?.qr || r.qr || null;
+
+    // Simpan di Supabase
+    await sb.from('deposits').insert({
+      user_id: currentUser.id,
+      trx_id: trxId,
+      amount: amount,
+      unique_amount: unique,
+      status: 'pending'
+    });
+
+    currentTrxId = trxId;
+    currentAmount = amount;
+
+    document.getElementById('uniqueAmount').textContent = formatRp(unique);
+    const qrEl = document.getElementById('qrContainer');
+    if (qr) {
+      qrEl.innerHTML = `<img src="${qr}" alt="QRIS" style="max-width:220px;margin:0 auto;border-radius:12px">`;
+    } else {
+      qrEl.innerHTML = `<p class="text-muted">QR tidak tersedia. Bayar manual sejumlah ${formatRp(unique)}</p>`;
+    }
+    document.getElementById('qrCard').classList.remove('hidden');
+    toast('Tagihan dibuat. Bayar tepat nominal di atas.');
+  } catch (e) {
+    toast('Gagal membuat tagihan');
+    console.error(e);
+  }
+  btn.disabled = false;
+  btn.textContent = 'Buat Tagihan';
+};
+
+document.getElementById('btnCheckStatus').onclick = async () => {
+  if (!currentTrxId) return;
+  try {
+    const r = await wnRequest('GET', '/deposit/status/' + encodeURIComponent(currentTrxId));
+    const status = (r.data?.status || r.status || '').toLowerCase();
+
+    if (status === 'success' || status === 'paid') {
+      // Cek apakah sudah diproses
+      const { data: dep } = await sb.from('deposits')
+        .select('*')
+        .eq('trx_id', currentTrxId)
+        .eq('user_id', currentUser.id)
+        .eq('status', 'pending')
+        .single();
+
+      if (dep) {
+        // Tambah saldo
+        const newBal = (currentUser.balance || 0) + dep.amount;
+        await sb.from('profiles').update({ balance: newBal }).eq('id', currentUser.id);
+        await sb.from('deposits').update({ status: 'success' }).eq('id', dep.id);
+
+        // Bonus referral
+        if (currentUser.referred_by) {
+          const { data: refUser } = await sb.from('profiles').select('balance').eq('id', currentUser.referred_by).single();
+          if (refUser) {
+            await sb.from('profiles').update({ balance: (refUser.balance || 0) + CONFIG.REFERRAL_BONUS }).eq('id', currentUser.referred_by);
+          }
+        }
+
+        currentUser.balance = newBal;
+        document.getElementById('userBalance').textContent = newBal.toLocaleString('id-ID');
+        toast('Deposit berhasil! Saldo bertambah ' + formatRp(dep.amount));
+        document.getElementById('qrCard').classList.add('hidden');
+      } else {
+        toast('Sudah diproses sebelumnya');
+      }
+    } else {
+      toast('Belum dibayar / masih pending');
+    }
+  } catch (e) {
+    toast('Gagal cek status');
+  }
+};
+</script>
+</body>
+</html>

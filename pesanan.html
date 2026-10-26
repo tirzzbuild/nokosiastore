@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pesanan - Nokosia Store</title>
+  <meta name="theme-color" content="#0b0b12">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .badge { display:inline-block; padding:3px 10px; border-radius:999px; font-size:0.75rem; font-weight:600; }
+    .badge-success { background:rgba(34,197,94,0.15); color:#22c55e; }
+    .badge-pending { background:rgba(234,179,8,0.15); color:#eab308; }
+    .badge-cancel { background:rgba(239,68,68,0.15); color:#ef4444; }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span>Nokosia</span>
+    </a>
+    <div class="balance-pill">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>
+      <span id="userBalance">0</span>
+    </div>
+  </div>
+</header>
+
+<main class="container page">
+  <div id="loginNeeded" class="card text-center hidden">
+    <p class="mb-3">Login untuk melihat pesanan.</p>
+    <a href="login.html" class="btn btn-primary">Login</a>
+  </div>
+
+  <div class="card" id="orderContent">
+    <div class="card-title">Riwayat Pesanan</div>
+    <div id="orderList">
+      <div class="text-center text-muted" style="padding:24px"><div class="spinner" style="margin:0 auto"></div></div>
+    </div>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    <span>Beranda</span>
+  </a>
+  <a href="deposit.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+    <span>Deposit</span>
+  </a>
+  <a href="beli.html" class="nav-item center">
+    <div class="center-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
+    </div>
+    <span>Beli</span>
+  </a>
+  <a href="pesanan.html" class="nav-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+    <span>Pesanan</span>
+  </a>
+  <a href="profil.html" class="nav-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    <span>Profil</span>
+  </a>
+</nav>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(async () => {
+  const user = await getCurrentUser();
+  if (!user) {
+    document.getElementById('loginNeeded').classList.remove('hidden');
+    document.getElementById('orderContent').classList.add('hidden');
+    return;
+  }
+  document.getElementById('userBalance').textContent = Number(user.balance||0).toLocaleString('id-ID');
+
+  const { data: list, error } = await sb
+    .from('orders')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  const el = document.getElementById('orderList');
+  if (error || !list || !list.length) {
+    el.innerHTML = '<p class="text-center text-muted">Belum ada pesanan.</p>';
+    return;
+  }
+
+  el.innerHTML = list.map(o => {
+    const badge = o.status === 'success' ? 'badge-success' : (o.status === 'cancelled' ? 'badge-cancel' : 'badge-pending');
+    const statusText = o.status === 'success' ? 'Berhasil' : (o.status === 'cancelled' ? 'Dibatalkan' : 'Pending');
+    return `<div class="list-item" style="cursor:default;flex-wrap:wrap">
+      <div class="info" style="flex:1">
+        <div class="name">${o.service_name || 'Layanan'}</div>
+        <div class="meta">${o.phone_number || '-'} · ${formatRp(o.price)}</div>
+        ${o.otp_code ? `<div class="meta" style="color:var(--purple-neon);margin-top:4px">OTP: ${o.otp_code}</div>` : ''}
+      </div>
+      <span class="badge ${badge}">${statusText}</span>
+    </div>`;
+  }).join('');
+})();
+</script>
+</body>
+</html>
